@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="errors_block" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/colorErrorMessage</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:background">@drawable/back_errors_block</item>
+        <item name="android:padding">20sp</item>
+    </style>
+
+
 </resources>
