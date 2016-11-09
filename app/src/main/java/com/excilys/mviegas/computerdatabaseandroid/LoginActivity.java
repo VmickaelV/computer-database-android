@@ -3,37 +3,47 @@ package com.excilys.mviegas.computerdatabaseandroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import com.excilys.mviegas.computerdatabaseandroid.applications.ComputerDatabaseApplication;
+import com.excilys.mviegas.computerdatabaseandroid.helpers.PreferencesHelper;
+import com.excilys.mviegas.computerdatabaseandroid.services.AuthenticationService;
+import com.excilys.mviegas.computerdatabaseandroid.services.InternetService;
+
+import javax.inject.Inject;
+
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers login via email/password.
+ * Activity pour s'identifier sur le service Computer Database.
+ *
+ * @author VIEGAS Mickael
  */
 public class LoginActivity extends AppCompatActivity {
-
+    private static final String TAG = "LoginActivity";
 
     public static final class Tags {
         public static final String KEY_SHARED_PREFERENCES = "sharedPreferencies";
@@ -53,12 +63,19 @@ public class LoginActivity extends AppCompatActivity {
             "foo@example.com:hello", "bar@example.com:world"
     };
 
-    private SharedPreferences sharedPreferences;
+    @Inject
+    PreferencesHelper mPreferencesHelper;
+
+    @Inject
+    InternetService internetService;
+
+    @Inject
+    AuthenticationService authenticationService;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private Subscription subscription = null;
 
     // UI references.
     private AutoCompleteTextView mLoginEdit;
@@ -72,13 +89,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        sharedPreferences = getSharedPreferences(Tags.KEY_SHARED_PREFERENCES, MODE_PRIVATE);
+        ((ComputerDatabaseApplication) getApplication()).getComputerDatabaseComponent().inject(this);
+
+        //        mPreferencesHelper = getSharedPreferences(Tags.KEY_SHARED_PREFERENCES, MODE_PRIVATE);
 
         // Set up the login form.
         mLoginEdit = (AutoCompleteTextView) findViewById(R.id.login);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(LoginActivity.this,
-                android.R.layout.simple_dropdown_item_1line, new ArrayList<>(sharedPreferences.getStringSet(Tags.KEY_SHARED_PREFERENCES, new HashSet<String>())));
-        mLoginEdit.setAdapter(adapter);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(LoginActivity.this,
+//                android.R.layout.simple_dropdown_item_1line, new ArrayList<>(mPreferencesHelper.getStringSet(Tags.KEY_SHARED_PREFERENCES, new HashSet<String>())));
+//        mLoginEdit.setAdapter(adapter);
 
         mPasswordEdit = (EditText) findViewById(R.id.password);
         mPasswordEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -147,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (subscription != null) {
             return;
         }
 
@@ -187,9 +206,41 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true, false);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            showProgress(true, null);
+            subscription = authenticationService.signin(email, password)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber() {
+                        @Override
+                        public void onCompleted() {
+                            Log.d(TAG, "onCompleted() called");
+                            subscription = null;
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.e(TAG, "onError() called with: e = [" + e + "]", e);
+                            if (e instanceof HttpException) {
+                                HttpException httpException = (HttpException) e;
+                                if (httpException.code() == 401) {
+                                    showProgress(false, getString(R.string.wrong_sign_in));
+                                } else {
+                                    showProgress(false, "Exception : " + e.getMessage());
+                                }
+                            } else {
+                                showProgress(false, "Exception : " + e.getMessage());
+                            }
+                            subscription = null;
+                        }
+
+                        @Override
+                        public void onNext(Object o) {
+                            showProgress(false, null);
+                            subscription = null;
+                        }
+
+
+                    });
         }
     }
 
@@ -208,12 +259,12 @@ public class LoginActivity extends AppCompatActivity {
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show, final boolean withErrors) {
+    private void showProgress(final boolean show, final String messageError) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime) * 5;
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
 //            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 //            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
@@ -233,14 +284,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            if (!show && withErrors) {
+            if (!show && !TextUtils.isEmpty(messageError)) {
                 mErrorBlocksView.setVisibility(View.VISIBLE);
+                ((TextView) mErrorBlocksView).setText(messageError);
                 Animation animation = AnimationUtils.loadAnimation(this, R.anim.slide_down_fade_in);
                 animation.setDuration(shortAnimTime);
                 animation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-
                     }
 
                     @Override
@@ -269,65 +320,28 @@ public class LoginActivity extends AppCompatActivity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mErrorBlocksView.setVisibility(show && withErrors ? View.VISIBLE : View.GONE);
+
+            ((TextView) mErrorBlocksView).setText(messageError);
+            mErrorBlocksView.setVisibility(show && !TextUtils.isEmpty(messageError) ? View.VISIBLE : View.GONE);
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return false;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false, !success);
-
-            if (success) {
-                finish();
-            } else {
-                //                mPasswordEdit.setError(getString(R.string.error_incorrect_password));
-                mPasswordEdit.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false, true);
-        }
-    }
+//            mAuthTask = null;
+//            showProgress(false, !success);
+//
+//            if (success) {
+//                finish();
+//            } else {
+//                //                mPasswordEdit.setError(getString(R.string.error_incorrect_password));
+//                mPasswordEdit.requestFocus();
+//            }
+//        }
+//
+//        @Override
+//        protected void onCancelled() {
+//            mAuthTask = null;
+//            showProgress(false, true);
+//        }
+//    }
 }
 
