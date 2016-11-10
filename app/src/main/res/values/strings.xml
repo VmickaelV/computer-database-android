@@ -15,4 +15,6 @@
         completions."
     </string>
     <string name="wrong_sign_in">Erreur d\'authentification</string>
+    <string name="title_computer_list">Computers</string>
+    <string name="title_computer_detail">Computer Detail</string>
 </resources>

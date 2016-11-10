@@ -3,6 +3,7 @@ package com.excilys.mviegas.computerdatabaseandroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.excilys.mviegas.computerdatabaseandroid.activities.ComputerListActivity;
 import com.excilys.mviegas.computerdatabaseandroid.applications.ComputerDatabaseApplication;
 import com.excilys.mviegas.computerdatabaseandroid.helpers.PreferencesHelper;
 import com.excilys.mviegas.computerdatabaseandroid.services.AuthenticationService;
@@ -229,6 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onNext(Object o) {
                             showProgress(false, null);
                             subscription = null;
+                            startActivity(new Intent(LoginActivity.this, ComputerListActivity.class));
                         }
 
 
