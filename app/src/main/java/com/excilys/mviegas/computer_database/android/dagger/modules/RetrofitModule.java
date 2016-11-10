@@ -2,6 +2,8 @@ package com.excilys.mviegas.computer_database.android.dagger.modules;
 
 import com.excilys.mviegas.computer_database.android.BuildConfig;
 import com.excilys.mviegas.computer_database.android.interceptors.AuthenticationRequestInterceptor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
 import javax.inject.Singleton;
 
@@ -24,15 +26,12 @@ public class RetrofitModule {
 
     @Provides
     @Singleton
-    public Retrofit providesRetrofit(AuthenticationRequestInterceptor authenticationRequestInterceptor) {
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(authenticationRequestInterceptor);
+	public Retrofit providesRetrofit(ObjectMapper objectMapper, OkHttpClient okHttpClient) {
 
         return new Retrofit.Builder()
-                .baseUrl(BuildConfig.SERVER_URL)
-                .client(httpClient.build())
-                .addConverterFactory(JacksonConverterFactory.create())
+				.baseUrl(BuildConfig.SERVER_URL)
+				.client(okHttpClient)
+				.addConverterFactory(JacksonConverterFactory.create(objectMapper))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
     }
@@ -42,4 +41,22 @@ public class RetrofitModule {
     public AuthenticationRequestInterceptor providesAuthenticationRequestInterceptor() {
         return new AuthenticationRequestInterceptor();
     }
+
+	@Provides
+	@Singleton
+	public OkHttpClient providesOkHttpClient(AuthenticationRequestInterceptor authenticationRequestInterceptor) {
+		OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+		httpClient.addInterceptor(authenticationRequestInterceptor);
+
+		return httpClient.build();
+	}
+
+	@Provides
+	@Singleton
+	public ObjectMapper providesObjectMapper() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new ThreeTenModule());
+
+		return objectMapper;
+	}
 }

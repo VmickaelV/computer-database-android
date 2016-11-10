@@ -55,11 +55,7 @@ public class ComputerDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putString(ComputerDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(ComputerDetailFragment.ARG_ITEM_ID));
-            ComputerDetailFragment fragment = new ComputerDetailFragment();
-            fragment.setArguments(arguments);
+            ComputerDetailFragment fragment = ComputerDetailFragment.make(getIntent().getLongExtra(ComputerDetailFragment.ARG_ITEM_ID, -1));
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.computer_detail_container, fragment)
                     .commit();

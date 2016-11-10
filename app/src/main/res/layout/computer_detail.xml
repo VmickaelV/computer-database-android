@@ -1,9 +1,21 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/computer_detail"
-    style="?android:attr/textAppearanceLarge"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context="com.excilys.mviegas.computer_database.android.activities.ComputerDetailFragment" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="16dp"
+              tools:context="com.excilys.mviegas.computer_database.android.activities.ComputerDetailFragment">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="?android:attr/textAppearanceSmall"
+            android:text="Test"/>
+    <TextView
+            android:id="@+id/computer_name_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            style="?android:attr/textAppearanceLarge"
+            android:text="Value"/>
+</LinearLayout>

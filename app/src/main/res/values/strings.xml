@@ -11,9 +11,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="wrong_sign_in">Erreur d\'authentification</string>
     <string name="title_computer_list">Computers</string>
     <string name="title_computer_detail">Computer Detail</string>

@@ -3,12 +3,15 @@ package com.excilys.mviegas.computer_database.android.dagger.modules;
 import android.content.Context;
 
 import com.excilys.mviegas.computer_database.android.api.AuthenticationApi;
+import com.excilys.mviegas.computer_database.android.api.CompanyApi;
 import com.excilys.mviegas.computer_database.android.api.ComputerApi;
 import com.excilys.mviegas.computer_database.android.interceptors.AuthenticationRequestInterceptor;
 import com.excilys.mviegas.computer_database.android.services.AuthenticationService;
+import com.excilys.mviegas.computer_database.android.services.CompanyService;
 import com.excilys.mviegas.computer_database.android.services.ComputerService;
 import com.excilys.mviegas.computer_database.android.services.InternetService;
 import com.excilys.mviegas.computer_database.android.services.impl.AuthenticationServiceImpl;
+import com.excilys.mviegas.computer_database.android.services.impl.CompanyServiceImpl;
 import com.excilys.mviegas.computer_database.android.services.impl.ComputerServiceImpl;
 import com.excilys.mviegas.computer_database.android.services.impl.InternetHelperImpl;
 
@@ -31,6 +34,12 @@ public class ServiceModule {
     public ComputerService provideComputerService(Retrofit retrofit) {
         return new ComputerServiceImpl(retrofit.create(ComputerApi.class));
     }
+
+	@Provides
+	@Singleton
+	public CompanyService provideCompanyService(Retrofit retrofit) {
+		return new CompanyServiceImpl(retrofit.create(CompanyApi.class));
+	}
 
     @Provides
     @Singleton

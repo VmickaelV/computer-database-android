@@ -6,8 +6,7 @@ import com.excilys.mviegas.computer_database.android.dagger.components.ComputerD
 import com.excilys.mviegas.computer_database.android.dagger.components.DaggerComputerDatabaseComponent;
 import com.excilys.mviegas.computer_database.android.dagger.modules.ContextModule;
 import com.facebook.stetho.Stetho;
-
-import net.danlew.android.joda.JodaTimeAndroid;
+import com.jakewharton.threetenabp.AndroidThreeTen;
 
 
 /**
@@ -26,7 +25,7 @@ public class ComputerDatabaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Stetho.initializeWithDefaults(this);
-        JodaTimeAndroid.init(this);
+        AndroidThreeTen.init(this);
 
         computerDatabaseComponent = DaggerComputerDatabaseComponent
                 .builder()

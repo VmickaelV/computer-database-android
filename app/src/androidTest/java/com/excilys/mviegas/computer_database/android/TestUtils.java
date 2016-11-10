@@ -1,4 +1,4 @@
-package com.excilys.mviegas.computer_database;
+package com.excilys.mviegas.computer_database.android;
 
 import android.os.Looper;
 

@@ -51,6 +51,10 @@ dependencies {
     // Internal Dependencies
     compile 'com.excilys.mviegas.computer_database:core:0.31.1-SNAPSHOT'
     compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
+    compile 'com.jakewharton.threetenabp:threetenabp:1.0.4'
+    compile('com.github.joschi.jackson:jackson-datatype-threetenbp:2.8.4') {
+        transitive = false
+    }
 
     // Android Support
     compile 'com.android.support:support-v4:24.2.1'
@@ -59,9 +63,12 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
 
     // Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0', {
+        exclude group: 'com.squareup.okhttp3', module: 'okhhtp'
+    }
     compile 'com.squareup.retrofit2:converter-jackson:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    compile 'com.squareup.okhttp3:okhttp:3.4.2'
 
     // ButterKnife
     compile 'com.jakewharton:butterknife:8.4.0'
@@ -78,21 +85,20 @@ dependencies {
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.1.6'
 
-    // Joda Time JSR
-    compile 'net.danlew:android.joda:2.9.5'
-
     // Stetho
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
-
-    // Compile
-    compile 'com.objectlife.statelayout:statelayout:1.0.4'
 
     // Testing Android
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.2', {
+        exclude group: 'com.android.support'
+    })
+    androidTestCompile 'com.jakewharton.espresso:okhttp3-idling-resource:1.0.0', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'okhttp'
+    }
 }

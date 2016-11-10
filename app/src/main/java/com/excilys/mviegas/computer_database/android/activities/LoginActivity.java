@@ -1,4 +1,4 @@
-package com.excilys.mviegas.computer_database.android;
+package com.excilys.mviegas.computer_database.android.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.excilys.mviegas.computer_database.android.activities.ComputerListActivity;
+import com.excilys.mviegas.computer_database.android.R;
 import com.excilys.mviegas.computer_database.android.applications.ComputerDatabaseApplication;
 import com.excilys.mviegas.computer_database.android.helpers.PreferencesHelper;
 import com.excilys.mviegas.computer_database.android.services.AuthenticationService;
@@ -204,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
             subscription = authenticationService.signin(email, password)
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber() {
+                    .subscribe(new Subscriber<Boolean>() {
                         @Override
                         public void onCompleted() {
                             Log.d(TAG, "onCompleted() called");
@@ -228,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onNext(Object o) {
+                        public void onNext(Boolean o) {
                             showProgress(false, null);
                             subscription = null;
                             startActivity(new Intent(LoginActivity.this, ComputerListActivity.class));
