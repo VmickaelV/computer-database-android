@@ -25,7 +25,7 @@ public final class PreferencesHelper {
     private SharedPreferences sharedPreferences;
 
     @Inject
-    private PreferencesHelper(Context context) {
+    PreferencesHelper(Context context) {
         this.sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
     }
 
