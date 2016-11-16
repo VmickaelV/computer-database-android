@@ -8,7 +8,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion "25.0.0"
     defaultConfig {
-        applicationId "com.excilys.mviegas.computerdatabaseandroid"
+        applicationId "com.excilys.mviegas.computer_database.android"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
@@ -33,7 +33,7 @@ android {
 
 dependencies {
     // Internal Dependencies
-    compile 'com.excilys.mviegas.speccdb:core:0.31.1-SNAPSHOT'
+    compile 'com.excilys.mviegas.computer_database:core:0.31.1-SNAPSHOT'
     compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final'
 
     // Android Support
