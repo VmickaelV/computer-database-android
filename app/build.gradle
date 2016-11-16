@@ -14,13 +14,29 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-        buildConfigField "String", "URL_API", "\"http://desktop-0098:8080/api/\""
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        dev {
+            def nameConfDefFile = 'config-dev.properties';
+            if (file(nameConfDefFile).exists()) {
+                def props = new Properties()
+                props.load(new FileInputStream(file(nameConfDefFile)))
+
+                buildConfigField 'String', 'SERVER_URL', '"' + props['server_url'] + '"'
+            } else {
+                throw new RuntimeException("Unable to find '$nameConfDefFile' file.")
+            }
+        }
+
+        prod {
+            buildConfigField 'String', 'SERVER_URL', '"http://localhost:8080/api/"'
         }
     }
 
@@ -67,6 +83,10 @@ dependencies {
 
     // Stetho
     compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+
+    // Compile
+    compile 'com.objectlife.statelayout:statelayout:1.0.4'
 
     // Testing Android
     testCompile 'junit:junit:4.12'

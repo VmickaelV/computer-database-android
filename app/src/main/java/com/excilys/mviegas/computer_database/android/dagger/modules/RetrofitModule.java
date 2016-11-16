@@ -30,7 +30,7 @@ public class RetrofitModule {
         httpClient.addInterceptor(authenticationRequestInterceptor);
 
         return new Retrofit.Builder()
-                .baseUrl(BuildConfig.URL_API)
+                .baseUrl(BuildConfig.SERVER_URL)
                 .client(httpClient.build())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
