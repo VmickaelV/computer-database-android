@@ -10,12 +10,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="?android:attr/textAppearanceSmall"
-            android:text="Test"/>
+        android:text="@string/computer_name_label" />
     <TextView
             android:id="@+id/computer_name_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
             style="?android:attr/textAppearanceLarge"
-            android:text="Value"/>
+        android:text="" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceSmall"
+        android:text="@string/computer_introduced_date_label" />
+
+    <TextView
+        android:id="@+id/computer_introduced_date_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        style="?android:attr/textAppearanceLarge"
+        android:text="" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceSmall"
+        android:text="@string/computer_discontinued_date_label" />
+
+    <TextView
+        android:id="@+id/computer_discontinued_date_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        style="?android:attr/textAppearanceLarge"
+        android:text="" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/textAppearanceSmall"
+        android:text="@string/computer_company_label" />
+
+    <TextView
+        android:id="@+id/computer_company_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
+        style="?android:attr/textAppearanceLarge"
+        android:text="" />
 </LinearLayout>

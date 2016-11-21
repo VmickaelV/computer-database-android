@@ -20,4 +20,5 @@
     <string name="computer_discontinued_date_label">Date de fin en marché</string>
     <string name="delete_action_label">Supprimer</string>
     <string name="done_action_label">Fin</string>
+    <string name="computer_company_label">Compagnie</string>
 </resources>

@@ -94,7 +94,10 @@ public class ComputerDetailFragment extends Fragment {
                                                 appBarLayout.setTitle(computerDto.getName());
                                             }
 
-                                            ((TextView) getView().findViewById(R.id.computer_name_value)).setText(computerDto.toString());
+                                            ((TextView) getView().findViewById(R.id.computer_name_value)).setText(computerDto.getName());
+                                            ((TextView) getView().findViewById(R.id.computer_introduced_date_value)).setText(String.valueOf(computerDto.getIntroducedDate()));
+                                            ((TextView) getView().findViewById(R.id.computer_discontinued_date_value)).setText(String.valueOf(computerDto.getDiscontinuedDate()));
+                                            ((TextView) getView().findViewById(R.id.computer_company_value)).setText(String.valueOf(computerDto.getCompany() == null ? "" : computerDto.getCompany().getName()));
                                         }
                                     });
                         }
