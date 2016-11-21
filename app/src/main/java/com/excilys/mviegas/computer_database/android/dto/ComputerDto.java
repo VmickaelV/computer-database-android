@@ -2,6 +2,7 @@ package com.excilys.mviegas.computer_database.android.dto;
 
 import com.excilys.mviegas.computer_database.android.data.Company;
 import com.excilys.mviegas.computer_database.android.data.Computer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.threeten.bp.LocalDate;
 
@@ -97,13 +98,15 @@ public class ComputerDto {
         mIdCompany = pIdCompany;
     }
 
-	public Company getCompany() {
-		return mCompany;
-	}
+    @JsonIgnore
+    public Company getCompany() {
+        return mCompany;
+    }
 
-	public void setCompany(Company company) {
-		mCompany = company;
-	}
+    @JsonIgnore
+    public void setCompany(Company company) {
+        mCompany = company;
+    }
 
 	//=============================================================
     // toString

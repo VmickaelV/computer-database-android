@@ -7,6 +7,7 @@ import com.excilys.mviegas.computer_database.persistence.Paginator;
 
 import javax.inject.Inject;
 
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -42,5 +43,10 @@ public class ComputerServiceImpl implements ComputerService {
     @GET("computers/{id}")
     public Observable<ComputerDto> get(@Path("id") long id) {
         return computerDatabaseApi.get(id);
+    }
+
+    @Override
+    public Observable<Void> create(@Body ComputerDto computerDto) {
+        return computerDatabaseApi.create(computerDto);
     }
 }

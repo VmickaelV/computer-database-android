@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.excilys.mviegas.computer_database.android.activities.LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,12 +28,17 @@
         <activity
             android:name=".activities.ComputerListActivity"
             android:label="@string/title_computer_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.ComputerDetailActivity"
             android:label="@string/title_computer_detail"
             android:parentActivityName=".activities.ComputerListActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.ComputerListActivity" />
+        </activity>
+        <activity android:name=".activities.EditActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.ComputerListActivity" />

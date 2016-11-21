@@ -41,6 +41,8 @@ import rx.schedulers.Schedulers;
 public class ComputerListActivity extends AppCompatActivity {
     private static final String TAG = "ComputerListActivity";
 
+    public static final int REQUEST_CREATE = 1;
+
     @Inject
     ComputerService computerService;
 
@@ -70,8 +72,7 @@ public class ComputerListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                startActivityForResult(new Intent(ComputerListActivity.this, EditActivity.class), REQUEST_CREATE);
             }
         });
 
@@ -88,7 +89,6 @@ public class ComputerListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-
         subscription = computerService.getAll(20, 0)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -100,7 +100,7 @@ public class ComputerListActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d(TAG, "onError() called with: e = [" + e + "]");
+                        Log.e(TAG, "onError: ", e);
                     }
 
                     @Override
@@ -116,6 +116,18 @@ public class ComputerListActivity extends AppCompatActivity {
         progressView = findViewById(R.id.loading_view);
         progressView.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CREATE:
+                if (resultCode == RESULT_OK) {
+                    Snackbar.make(recyclerView, "Ordinateur bien crée", Snackbar.LENGTH_LONG).show();
+                }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     public class SimpleItemRecyclerViewAdapter

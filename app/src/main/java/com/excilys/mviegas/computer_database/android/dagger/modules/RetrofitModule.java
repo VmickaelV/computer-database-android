@@ -2,14 +2,16 @@ package com.excilys.mviegas.computer_database.android.dagger.modules;
 
 import com.excilys.mviegas.computer_database.android.BuildConfig;
 import com.excilys.mviegas.computer_database.android.interceptors.AuthenticationRequestInterceptor;
+import com.excilys.mviegas.computer_database.android.jackson.MyJacksonModule;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.threetenbp.ThreeTenModule;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
@@ -47,6 +49,12 @@ public class RetrofitModule {
 	public OkHttpClient providesOkHttpClient(AuthenticationRequestInterceptor authenticationRequestInterceptor) {
 		OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 		httpClient.addInterceptor(authenticationRequestInterceptor);
+        httpClient.networkInterceptors().add(new StethoInterceptor());
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        httpClient.addInterceptor(interceptor);
 
 		return httpClient.build();
 	}
@@ -55,7 +63,7 @@ public class RetrofitModule {
 	@Singleton
 	public ObjectMapper providesObjectMapper() {
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.registerModule(new ThreeTenModule());
+        objectMapper.registerModule(new MyJacksonModule());
 
 		return objectMapper;
 	}

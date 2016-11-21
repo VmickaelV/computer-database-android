@@ -4,7 +4,9 @@ import com.excilys.mviegas.computer_database.android.dto.ComputerDto;
 import com.excilys.mviegas.computer_database.data.Computer;
 import com.excilys.mviegas.computer_database.persistence.Paginator;
 
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -31,4 +33,7 @@ public interface ComputerApi {
 
     @GET("computers/{id}")
     Observable<ComputerDto> get(@Path("id") long id);
+
+    @POST("computers")
+    Observable<Void> create(@Body ComputerDto computerDto);
 }

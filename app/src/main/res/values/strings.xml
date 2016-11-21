@@ -15,4 +15,9 @@
     <string name="wrong_sign_in">Erreur d\'authentification</string>
     <string name="title_computer_list">Computers</string>
     <string name="title_computer_detail">Computer Detail</string>
+    <string name="computer_name_label">Nom de l\'ordinateur</string>
+    <string name="computer_introduced_date_label">Date de mise en marché</string>
+    <string name="computer_discontinued_date_label">Date de fin en marché</string>
+    <string name="delete_action_label">Supprimer</string>
+    <string name="done_action_label">Fin</string>
 </resources>
