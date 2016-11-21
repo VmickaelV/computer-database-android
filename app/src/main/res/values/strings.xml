@@ -21,4 +21,6 @@
     <string name="delete_action_label">Supprimer</string>
     <string name="done_action_label">Fin</string>
     <string name="computer_company_label">Compagnie</string>
+    <string name="computer_created_label">Ordinateur bien crée</string>
+    <string name="no_internet_label">Vous n\'êtes pas connecté à Internet</string>
 </resources>

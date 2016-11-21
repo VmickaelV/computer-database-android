@@ -14,6 +14,7 @@ import com.excilys.mviegas.computer_database.android.applications.ComputerDataba
 import com.jakewharton.espresso.OkHttp3IdlingResource;
 
 import org.hamcrest.Matchers;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,18 +51,24 @@ public class LoginActivityTest {
 
 	@Inject
     OkHttpClient mOkHttpClient;
+    private IdlingResource okHttp3IdlingResource;
 
-	@Before
-	public void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 		mOkHttpClient = ((ComputerDatabaseApplication) mActivityRule.getActivity().getApplication()).getComputerDatabaseComponent().getOkHttpClient();
 		assertNotNull(mOkHttpClient);
 
-		IdlingResource idlingResource = OkHttp3IdlingResource.create("okhttpclient", mOkHttpClient);
-		Espresso.registerIdlingResources(idlingResource);
-	}
+        okHttp3IdlingResource = OkHttp3IdlingResource.create("okhttpclient", mOkHttpClient);
+        Espresso.registerIdlingResources(okHttp3IdlingResource);
+    }
 
-	@Test
-	public void goodLogin() throws Exception {
+    @After
+    public void tearDown() throws Exception {
+        Espresso.unregisterIdlingResources(okHttp3IdlingResource);
+    }
+
+    @Test
+    public void goodLogin() throws Exception {
 		onView(withId(R.id.computer_list)).check(ViewAssertions.doesNotExist());
 		onView(withId(R.id.login)).perform(typeText("admin"), pressImeActionButton());
 		Espresso.closeSoftKeyboard();
@@ -92,7 +99,7 @@ public class LoginActivityTest {
 
         onView(withId(R.id.done_action)).perform(click());
 
-        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Ordinateur bien crée")))
+        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(R.string.computer_created_label)))
                 .check(doesNotExist());
 
         Espresso.closeSoftKeyboard();
@@ -103,7 +110,7 @@ public class LoginActivityTest {
 
         onView(withId(R.id.done_action)).perform(click());
 
-        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Ordinateur bien crée")))
+        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(R.string.computer_created_label)))
                 .check(matches(isDisplayed()));
     }
 

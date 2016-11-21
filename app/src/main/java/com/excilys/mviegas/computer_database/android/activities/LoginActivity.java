@@ -160,6 +160,10 @@ public class LoginActivity extends AppCompatActivity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        if (!internetService.isConnected()) {
+            Snackbar.make(mProgressView, R.string.no_internet_label, Snackbar.LENGTH_LONG).show();
+            return;
+        }
         if (subscription != null) {
             return;
         }

@@ -123,7 +123,7 @@ public class ComputerListActivity extends AppCompatActivity {
         switch (requestCode) {
             case REQUEST_CREATE:
                 if (resultCode == RESULT_OK) {
-                    Snackbar.make(recyclerView, "Ordinateur bien crée", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(recyclerView, R.string.computer_created_label, Snackbar.LENGTH_LONG).show();
                 }
             default:
                 super.onActivityResult(requestCode, resultCode, data);

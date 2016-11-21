@@ -11,7 +11,7 @@ public abstract class BaseIdlingResource implements IdlingResource {
     private ResourceCallback callback;
 
     @Override
-    public final String getName() {
+    public String getName() {
         return this.getClass().getName();
     }
 
