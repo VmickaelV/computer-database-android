@@ -1,5 +1,6 @@
 package com.excilys.mviegas.computer_database.android.helpers;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -12,9 +13,10 @@ import javax.inject.Inject;
  *
  * @author VIEGAS Mickael
  */
-
+@SuppressLint("CommitPrefEdits")
 public final class PreferencesHelper {
-    protected final String SHARED_PREFERENCES = "StorageModule";
+    private final String SHARED_PREFERENCES = "StorageModule";
+    private SharedPreferences.Editor mEditor;
 
     public static final class Keys {
         public static final String API_KEY = "PREFERENCES_API_KEY";
@@ -22,34 +24,48 @@ public final class PreferencesHelper {
         public static final String LOGINS_SAVED = "PREFERENCES_LOGINS_SAVED";
     }
 
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences mSharedPreferences;
 
     @Inject
     PreferencesHelper(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        this.mSharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
     }
 
-    public String getApiKey() {
-        return this.sharedPreferences.getString(Keys.API_KEY, null);
+    public String apiKey() {
+        return this.mSharedPreferences.getString(Keys.API_KEY, null);
     }
 
-    public String getAuthorizationHeader() {
-        return this.sharedPreferences.getString(Keys.AUTHORIZATION_HEADER, null);
+    public String authorizationHeader() {
+        return this.mSharedPreferences.getString(Keys.AUTHORIZATION_HEADER, null);
     }
 
-    public Set<String> getLoginsSaved() {
-        return this.sharedPreferences.getStringSet(Keys.AUTHORIZATION_HEADER, null);
+    public Set<String> loginsSaved() {
+        return this.mSharedPreferences.getStringSet(Keys.AUTHORIZATION_HEADER, null);
     }
 
-    public void setApiKey(String apiKey) {
-        this.sharedPreferences.edit().putString(Keys.API_KEY, apiKey).apply();
+    public PreferencesHelper apiKey(String apiKey) {
+        this.mSharedPreferences.edit().putString(Keys.API_KEY, apiKey);
+        return this;
     }
 
-    public void setAuthorizationHeader(String authorizationHeader) {
-        this.sharedPreferences.edit().putString(Keys.AUTHORIZATION_HEADER, authorizationHeader).apply();
+    public PreferencesHelper authorizationHeader(String authorizationHeader) {
+        this.mEditor.putString(Keys.AUTHORIZATION_HEADER, authorizationHeader);
+        return this;
     }
 
-    public void setLoginsSaved(Set<String> loginsSaved) {
-        this.sharedPreferences.edit().putStringSet(Keys.AUTHORIZATION_HEADER, loginsSaved).apply();
+    public PreferencesHelper loginsSaved(Set<String> loginsSaved) {
+        this.mEditor.putStringSet(Keys.AUTHORIZATION_HEADER, loginsSaved);
+        return this;
     }
+
+    public void apply() {
+        mEditor.apply();
+        mEditor = null;
+    }
+
+    public PreferencesHelper edit() {
+        mEditor = this.mSharedPreferences.edit();
+        return this;
+    }
+
 }
