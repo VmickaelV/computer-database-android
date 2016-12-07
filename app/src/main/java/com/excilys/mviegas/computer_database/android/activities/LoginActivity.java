@@ -119,7 +119,10 @@ public class LoginActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
         mErrorBlocksView = findViewById(R.id.errors_view);
 
-        internetService.subscribeNetworkState().subscribe(new Action1<Boolean>() {
+        internetService.subscribeNetworkState()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
                 if (aBoolean) {
