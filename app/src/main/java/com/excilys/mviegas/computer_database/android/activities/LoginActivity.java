@@ -35,6 +35,7 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -46,6 +47,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
+    private Snackbar mSnackBar;
 
     public static final class Tags {
         public static final String KEY_SHARED_PREFERENCES = "sharedPreferencies";
@@ -105,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Button mLoginButton = (Button) findViewById(R.id.sign_in_button);
+        final Button mLoginButton = (Button) findViewById(R.id.sign_in_button);
         mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +118,21 @@ public class LoginActivity extends AppCompatActivity {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mErrorBlocksView = findViewById(R.id.errors_view);
+
+        internetService.subscribeNetworkState().subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                if (aBoolean) {
+                    if (mSnackBar != null) {
+                        mSnackBar.dismiss();
+                    }
+                } else {
+                    mSnackBar = Snackbar.make(LoginActivity.this.mLoginFormView, "Vous n'êtes pas connecté au web.", Snackbar.LENGTH_INDEFINITE);
+                    mSnackBar.show();
+                }
+                mLoginButton.setEnabled(aBoolean);
+            }
+        });
     }
 
     private boolean mayRequestContacts() {
